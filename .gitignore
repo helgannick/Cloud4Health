@@ -1,0 +1,73 @@
+# ============================================================================
+# Cloud4Health Terraform - .gitignore
+# ============================================================================
+
+# Terraform files
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# Sensitive files
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets.tfvars
+*.env
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+logs/
+
+# Backup files
+*.backup
+*.bak
+
+# Python (para scripts auxiliares)
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+env/
+*.egg-info/
+
+# Node (se usar CDK ou outras ferramentas)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Docker
+.dockerignore
+
+# Temporary files
+*.tmp
+temp/
+tmp/
