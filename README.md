@@ -56,8 +56,11 @@ cloud4health-terraform/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   └── outputs.tf
-│   ├── security/           # 🔄 FASE 2 - Próxima
-│   ├── compute/            # 🔄 FASE 3
+│   ├── security/           # ✅ FASE 2 - Concluída
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   ├── compute/            # 🔄 FASE 3 - Próxima
 │   ├── database/           # 🔄 FASE 4
 │   ├── storage/            # 🔄 FASE 5
 │   └── monitoring/         # 🔄 FASE 6
@@ -115,6 +118,20 @@ terraform output
 - ✅ 5x Route Tables
 - ✅ 1x DB Subnet Group
 - ✅ VPC Flow Logs (auditoria)
+
+## 📊 Recursos Criados (Fase 2 - Security)
+
+**Security Groups:**
+- ✅ ALB Security Group (HTTPS público)
+- ✅ ECS Security Group (aplicação privada)
+- ✅ RDS Security Group (database isolado)
+- ✅ VPC Endpoints Security Group
+
+**IAM Roles:**
+- ✅ ECS Task Execution Role (ECR, Logs, Secrets)
+- ✅ ECS Task Role (S3, CloudWatch, X-Ray)
+- ✅ RDS Enhanced Monitoring Role
+- ✅ Lambda Execution Role
 
 ## 💰 Estimativa de Custos (Fase 1)
 

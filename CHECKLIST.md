@@ -41,39 +41,49 @@
 
 ---
 
-## 📋 FASE 2: SECURITY (A fazer)
+## 📋 FASE 2: SECURITY (Concluída) ✅
 
 ### Security Groups
-- [ ] ALB Security Group
-  - [ ] Inbound: 443 (HTTPS) from 0.0.0.0/0
-  - [ ] Outbound: 8080 to ECS SG
+- [x] ALB Security Group
+  - [x] Inbound: 443 (HTTPS) from 0.0.0.0/0
+  - [x] Inbound: 80 (HTTP) from 0.0.0.0/0
+  - [x] Outbound: 8080 to ECS SG
 
-- [ ] ECS Security Group
-  - [ ] Inbound: 8080 from ALB SG
-  - [ ] Outbound: 5432 to RDS SG
-  - [ ] Outbound: 443 to Internet (updates)
+- [x] ECS Security Group
+  - [x] Inbound: 8080 from ALB SG
+  - [x] Outbound: 5432 to RDS SG
+  - [x] Outbound: 443 to Internet (updates)
+  - [x] Outbound: 53 (DNS)
 
-- [ ] RDS Security Group
-  - [ ] Inbound: 5432 from ECS SG
-  - [ ] Outbound: Nenhuma
+- [x] RDS Security Group
+  - [x] Inbound: 5432 from ECS SG
+  - [x] Outbound: Nenhuma (isolado)
+
+- [x] VPC Endpoints Security Group
+  - [x] Inbound: 443 from ECS SG
 
 ### IAM Roles
-- [ ] ECS Task Execution Role
-  - [ ] ECR pull permissions
-  - [ ] CloudWatch Logs write
-  - [ ] Secrets Manager read
+- [x] ECS Task Execution Role
+  - [x] ECR pull permissions
+  - [x] CloudWatch Logs write
+  - [x] Secrets Manager read
+  - [x] KMS decrypt
 
-- [ ] ECS Task Role
-  - [ ] S3 access (prontuários)
-  - [ ] RDS connect
-  - [ ] CloudWatch metrics
+- [x] ECS Task Role
+  - [x] S3 access (prontuários)
+  - [x] CloudWatch metrics
+  - [x] X-Ray tracing
+  - [x] ECS Exec (opcional)
 
-- [ ] RDS Enhanced Monitoring Role
+- [x] RDS Enhanced Monitoring Role
 
-### Network ACLs (Opcional)
-- [ ] Public Subnet NACL
-- [ ] Private Subnet NACL
-- [ ] Database Subnet NACL
+- [x] Lambda Execution Role (auxiliar)
+
+### Documentação
+- [x] Arquitetura de segurança detalhada
+- [x] Matriz de Security Groups
+- [x] Diagrama de fluxo de tráfego
+- [x] Tabela de IAM Roles e permissões
 
 ---
 

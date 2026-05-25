@@ -82,6 +82,36 @@ module "networking" {
 }
 
 # ============================================================================
+# MÓDULO 2: SECURITY
+# Security Groups e IAM Roles
+# ============================================================================
+module "security" {
+  source = "./modules/security"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  # VPC Info (do módulo networking)
+  vpc_id   = module.networking.vpc_id
+  vpc_cidr = module.networking.vpc_cidr
+
+  # Security Groups Configuration
+  alb_ingress_cidr_blocks = ["0.0.0.0/0"] # Internet pública
+  ecs_app_port            = 8080          # Porta da aplicação
+  rds_port                = 5432          # PostgreSQL
+
+  # IAM Configuration
+  enable_ecs_exec                = true # Habilitar ECS Exec para debugging
+  enable_rds_enhanced_monitoring = true # Métricas detalhadas do RDS
+  s3_bucket_arns                 = []   # Será preenchido na Fase 5
+
+  # SSH (apenas para dev/debugging - desabilitado por padrão)
+  enable_ssh_access = false
+
+  tags = var.tags
+}
+
+# ============================================================================
 # Outputs Globais
 # ============================================================================
 
@@ -125,4 +155,35 @@ output "nat_gateway_ips" {
 output "network_summary" {
   description = "Resumo da configuração de rede"
   value       = module.networking.network_summary
+}
+
+# Security Outputs
+output "alb_security_group_id" {
+  description = "ID do Security Group do ALB"
+  value       = module.security.alb_security_group_id
+}
+
+output "ecs_security_group_id" {
+  description = "ID do Security Group do ECS"
+  value       = module.security.ecs_security_group_id
+}
+
+output "rds_security_group_id" {
+  description = "ID do Security Group do RDS"
+  value       = module.security.rds_security_group_id
+}
+
+output "ecs_task_execution_role_arn" {
+  description = "ARN do ECS Task Execution Role"
+  value       = module.security.ecs_task_execution_role_arn
+}
+
+output "ecs_task_role_arn" {
+  description = "ARN do ECS Task Role"
+  value       = module.security.ecs_task_role_arn
+}
+
+output "security_summary" {
+  description = "Resumo da configuração de segurança"
+  value       = module.security.security_summary
 }
