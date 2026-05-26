@@ -218,6 +218,38 @@ output "storage_summary" {
 
 
 # ============================================================================
+# MÓDULO 6: MONITORING
+# ============================================================================
+module "monitoring" {
+  source = "./modules/monitoring"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  # ECS
+  ecs_cluster_name = module.compute.ecs_cluster_name
+  ecs_service_name = module.compute.ecs_service_name
+
+  # ALB
+  alb_arn_suffix           = split("/", module.compute.alb_arn)[1]
+  target_group_arn_suffix  = split(":", module.compute.target_group_arn)[5]
+
+  # Database
+  db_instance_id = module.database.db_instance_id
+
+  tags = var.tags
+}
+
+# Monitoring Outputs
+output "dashboard_name" {
+  value = module.monitoring.dashboard_name
+}
+
+output "monitoring_summary" {
+  value = module.monitoring.monitoring_summary
+}
+
+# ============================================================================
 # Outputs Globais
 # ============================================================================
 
