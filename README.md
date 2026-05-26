@@ -28,59 +28,77 @@ Este projeto implementa a modernização completa da infraestrutura da **Cloud4H
 
 ## 🏗️ Arquitetura Final
 
-``
-┌─────────────────────────────────────────────────────────┐
-│         Cloud4Health AWS Architecture (Multi-AZ)         │
-└─────────────────────────────────────────────────────────┘
-Internet
-↓
-Application Load Balancer (Multi-AZ)
-↓
-ECS Fargate Service (Auto Scaling 2-4 tasks)
-↓
-RDS PostgreSQL 15 (Multi-AZ)
-↓
-S3 Buckets (Prontuários, Backups, Logs)
-VPC (10.0.0.0/16) - Multi-AZ (us-east-1a, us-east-1b)
-├── Public Subnets (2 AZs) - ALB, NAT Gateway
-├── Private Subnets (2 AZs) - ECS Fargate Tasks
-└── Database Subnets (2 AZs) - RDS PostgreSQL (isolated)
-Monitoring: CloudWatch Dashboard + Alarms
-Security: 4 Security Groups + 4 IAM Roles (Least Privilege)
-``
+```
+┌──────────────────────────────────────────────────────────┐
+│        Cloud4Health AWS Architecture (Multi-AZ)           │
+└──────────────────────────────────────────────────────────┘
+
+                        Internet
+                           │
+                           ▼
+              ┌────────────────────────┐
+              │ Application Load       │
+              │ Balancer (Multi-AZ)    │
+              └────────────────────────┘
+                           │
+                           ▼
+              ┌────────────────────────┐
+              │ ECS Fargate Service    │
+              │ Auto Scaling (2-4)     │
+              └────────────────────────┘
+                           │
+                ┌──────────┴──────────┐
+                ▼                     ▼
+    ┌──────────────────┐   ┌──────────────────┐
+    │ RDS PostgreSQL   │   │ S3 Buckets (3)   │
+    │ Multi-AZ         │   │ - Prontuários    │
+    └──────────────────┘   │ - Backups        │
+                           │ - Logs           │
+                           └──────────────────┘
+
+VPC: 10.0.0.0/16 (Multi-AZ: us-east-1a, us-east-1b)
+├── Public Subnets (2 AZs)
+│   ├── ALB
+│   └── NAT Gateway
+├── Private Subnets (2 AZs)
+│   └── ECS Fargate Tasks
+└── Database Subnets (2 AZs)
+    └── RDS PostgreSQL (isolated)
+```
 
 ## 📁 Estrutura do Projeto
 
-``
+```
 cloud4health-terraform/
-├── main.tf                  # Configuração principal (6 módulos)
-├── variables.tf             # Variáveis globais
-├── outputs.tf              # Outputs globais
-├── terraform.tfvars        # Valores das variáveis
+├── main.tf                # Configuração principal (6 módulos)
+├── variables.tf           # Variáveis globais
+├── outputs.tf            # Outputs globais
+├── terraform.tfvars      # Valores das variáveis
 ├── README.md
 ├── LICENSE (MIT)
-├── CHECKLIST.md           # Progresso das fases
-├── CONTRIBUTING.md        # Convenções de commit
+├── CHECKLIST.md         # Progresso das fases
+├── CONTRIBUTING.md      # Convenções
 │
 ├── modules/
-│   ├── networking/         # ✅ FASE 1 - Concluída (18 recursos)
-│   ├── security/           # ✅ FASE 2 - Concluída (27 recursos)
-│   ├── compute/            # ✅ FASE 3 - Concluída (15 recursos)
-│   ├── database/           # ✅ FASE 4 - Concluída (6 recursos)
-│   ├── storage/            # ✅ FASE 5 - Concluída (15 recursos)
-│   └── monitoring/         # ✅ FASE 6 - Concluída (2 recursos)
+│   ├── networking/      # ✅ FASE 1 (18 recursos)
+│   ├── security/        # ✅ FASE 2 (27 recursos)
+│   ├── compute/         # ✅ FASE 3 (15 recursos)
+│   ├── database/        # ✅ FASE 4 (6 recursos)
+│   ├── storage/         # ✅ FASE 5 (15 recursos)
+│   └── monitoring/      # ✅ FASE 6 (2 recursos)
 │
 ├── docs/
-│   ├── NETWORK_ARCHITECTURE.md    # Arquitetura de rede detalhada
-│   ├── SECURITY_ARCHITECTURE.md   # Arquitetura de segurança
-│   ├── GIT_GUIDE.md               # Guia de Git
-│   └── WSL_GUIDE.md               # Configuração WSL
+│   ├── NETWORK_ARCHITECTURE.md
+│   ├── SECURITY_ARCHITECTURE.md
+│   ├── GIT_GUIDE.md
+│   └── WSL_GUIDE.md
 │
 └── scripts/
-├── init.sh                     # Inicialização do projeto
-├── quick-commit.sh             # Commit automatizado
-└── pre-commit-check.sh         # Validação pré-commit
-``
+    ├── init.sh
+    ├── quick-commit.sh
+    └── pre-commit-check.sh
+```
+
 ## 📊 Recursos AWS Criados
 
 ### **TOTAL: 83 recursos**
@@ -148,14 +166,14 @@ cloud4health-terraform/
 
 ## 🔒 AWS Well-Architected Framework
 
-### ✅ **Excelência Operacional**
+### ✅ Excelência Operacional
 - Infrastructure as Code (Terraform)
 - Módulos reutilizáveis
 - Versionamento Git
 - Scripts de automação
 - Documentação completa
 
-### ✅ **Segurança**
+### ✅ Segurança
 - Defense in Depth (4 camadas de Security Groups)
 - Least Privilege (IAM Roles específicos)
 - Encryption at rest (RDS, S3)
@@ -164,21 +182,21 @@ cloud4health-terraform/
 - Database em subnet isolada (zero egress)
 - VPC Flow Logs
 
-### ✅ **Confiabilidade**
+### ✅ Confiabilidade
 - Multi-AZ deployment (RDS, ECS, ALB)
 - Auto Scaling (CPU, Memory, Requests)
 - Health checks automáticos
 - Automated backups (RDS 7 dias, S3 versioning)
 - CloudWatch Alarms
 
-### ✅ **Eficiência de Performance**
+### ✅ Eficiência de Performance
 - ECS Fargate serverless
 - Auto Scaling baseado em métricas
 - Performance Insights (RDS)
 - Container Insights (ECS)
 - CloudWatch Dashboard
 
-### ✅ **Otimização de Custos**
+### ✅ Otimização de Custos
 - Free Tier maximizado
 - Single NAT Gateway
 - S3 Lifecycle policies
@@ -187,20 +205,21 @@ cloud4health-terraform/
 - Tags para cost allocation
 - **Destruição pós-documentação (custo zero)**
 
-### ✅ **Sustentabilidade**
+### ✅ Sustentabilidade
 - Serverless onde possível
 - Auto-shutdown capability
 - Recursos sob demanda
 
 ## 🚀 Como Usar Este Projeto
 
-### **Pré-requisitos:**
+### Pré-requisitos
+
 - AWS CLI configurado
 - Terraform >= 1.0
 - Git
 - Conta AWS (Free Tier recomendado)
 
-### **Deploy Completo:**
+### Deploy Completo
 
 ```bash
 # 1. Clonar repositório
@@ -229,7 +248,7 @@ terraform output
 terraform destroy
 ```
 
-### **Deploy por Fases:**
+### Deploy por Fases
 
 ```bash
 # Aplicar apenas Networking
@@ -251,33 +270,33 @@ terraform apply -target=module.security
 
 ## 🎓 Disciplinas do Projeto Integrado
 
-### **Passo 1 - Administração de Sistemas Operacionais**
+### Passo 1 - Administração de Sistemas Operacionais
 - ✅ IaC com Terraform (automação)
 - ✅ ECS Task Management
 - ✅ CloudWatch Logs
 - ✅ Scripts de automação
 - ✅ VPC Flow Logs
 
-### **Passo 2 - Arquitetura de Computação em Nuvem**
+### Passo 2 - Arquitetura de Computação em Nuvem
 - ✅ VPC Multi-AZ completa
 - ✅ Security Groups (Defense in Depth)
 - ✅ IAM Roles (Least Privilege)
 - ✅ Conformidade LGPD
 - ✅ Well-Architected Framework
 
-### **Passo 3 - Arquitetura de Redes**
+### Passo 3 - Arquitetura de Redes
 - ✅ Modernização LAN (subnets segmentadas)
 - ✅ Integração nuvem híbrida
 - ✅ Route Tables configuradas
 - ✅ Protocolos TCP/IP, DNS
 
-### **Passo 4 - Programação e Banco de Dados**
+### Passo 4 - Programação e Banco de Dados
 - ✅ RDS PostgreSQL otimizado
 - ✅ Multi-AZ alta disponibilidade
 - ✅ Performance Insights
 - ✅ Índices planejados
 
-### **Passo 5 - Plataformas e Migração em Nuvem**
+### Passo 5 - Plataformas e Migração em Nuvem
 - ✅ IaaS: VPC, ECS, RDS
 - ✅ PaaS: ECS Fargate, RDS Managed
 - ✅ Responsabilidade compartilhada
@@ -317,6 +336,15 @@ Projeto segue **Conventional Commits**:
 - `chore:` Tarefas auxiliares
 
 Histórico completo: `git log --oneline --graph`
+
+## 🎯 Fases do Projeto
+
+- ✅ **Fase 1:** Networking - VPC Multi-AZ completa
+- ✅ **Fase 2:** Security - Security Groups e IAM Roles
+- ✅ **Fase 3:** Compute - ECS Fargate, ALB, Auto Scaling
+- ✅ **Fase 4:** Database - RDS PostgreSQL Multi-AZ
+- ✅ **Fase 5:** Storage - S3 Buckets com Lifecycle
+- ✅ **Fase 6:** Monitoring - CloudWatch Dashboard
 
 ## ⚠️ Importante
 
