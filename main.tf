@@ -162,6 +162,44 @@ module "compute" {
 }
 
 # ============================================================================
+# MÓDULO 4: DATABASE
+# ============================================================================
+module "database" {
+  source = "./modules/database"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  # Network
+  vpc_id                = module.networking.vpc_id
+  db_subnet_group_name  = module.networking.db_subnet_group_name
+  rds_security_group_id = module.security.rds_security_group_id
+
+  # Database
+  db_name           = "cloud4health"
+  db_username       = "c4hadmin"
+  instance_class    = "db.t3.micro"
+  allocated_storage = 20
+  multi_az          = true
+
+  # Monitoring
+  monitoring_role_arn = module.security.rds_enhanced_monitoring_role_arn
+
+  tags = var.tags
+}
+
+# Database Outputs
+output "db_endpoint" {
+  description = "Endpoint do RDS"
+  value       = module.database.db_endpoint
+  sensitive   = true
+}
+
+output "database_summary" {
+  value = module.database.database_summary
+}
+
+# ============================================================================
 # Outputs Globais
 # ============================================================================
 
