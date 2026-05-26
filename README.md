@@ -28,6 +28,7 @@ Este projeto implementa a modernização completa da infraestrutura da **Cloud4H
 
 ## 🏗️ Arquitetura Final
 
+``
 ┌─────────────────────────────────────────────────────────┐
 │         Cloud4Health AWS Architecture (Multi-AZ)         │
 └─────────────────────────────────────────────────────────┘
@@ -46,8 +47,11 @@ VPC (10.0.0.0/16) - Multi-AZ (us-east-1a, us-east-1b)
 └── Database Subnets (2 AZs) - RDS PostgreSQL (isolated)
 Monitoring: CloudWatch Dashboard + Alarms
 Security: 4 Security Groups + 4 IAM Roles (Least Privilege)
+``
 
 ## 📁 Estrutura do Projeto
+
+``
 cloud4health-terraform/
 ├── main.tf                  # Configuração principal (6 módulos)
 ├── variables.tf             # Variáveis globais
@@ -76,7 +80,7 @@ cloud4health-terraform/
 ├── init.sh                     # Inicialização do projeto
 ├── quick-commit.sh             # Commit automatizado
 └── pre-commit-check.sh         # Validação pré-commit
-
+``
 ## 📊 Recursos AWS Criados
 
 ### **TOTAL: 83 recursos**
