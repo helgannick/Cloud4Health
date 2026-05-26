@@ -97,7 +97,7 @@ module "security" {
 
   # Security Groups Configuration
   alb_ingress_cidr_blocks = ["0.0.0.0/0"] # Internet pública
-  ecs_app_port            = 8080          # Porta da aplicação
+  ecs_app_port            = 80          # Porta da aplicação
   rds_port                = 5432          # PostgreSQL
 
   # IAM Configuration
@@ -107,6 +107,56 @@ module "security" {
 
   # SSH (apenas para dev/debugging - desabilitado por padrão)
   enable_ssh_access = false
+
+  tags = var.tags
+}
+
+# ============================================================================
+# MÓDULO 3: COMPUTE
+# ECS Fargate, Application Load Balancer, Auto Scaling
+# ============================================================================
+module "compute" {
+  source = "./modules/compute"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  # Networking (do módulo networking)
+  vpc_id             = module.networking.vpc_id
+  public_subnet_ids  = module.networking.public_subnet_ids
+  private_subnet_ids = module.networking.private_subnet_ids
+
+  # Security (do módulo security)
+  alb_security_group_id       = module.security.alb_security_group_id
+  ecs_security_group_id       = module.security.ecs_security_group_id
+  ecs_task_execution_role_arn = module.security.ecs_task_execution_role_arn
+  ecs_task_role_arn           = module.security.ecs_task_role_arn
+
+  # ECS Configuration
+  container_name   = "cloud4health-api"
+  container_port   = 80
+  container_cpu    = 256            # 0.25 vCPU
+  container_memory = 512            # 512 MB
+  container_image  = "nginx:alpine" # Placeholder até criar aplicação
+
+  # Service Configuration
+  desired_count = 2 # Alta disponibilidade
+
+  # Auto Scaling
+  min_capacity        = 2
+  max_capacity        = 4
+  cpu_target_value    = 70
+  memory_target_value = 80
+
+  # Health Check
+  health_check_path     = "/"
+  health_check_interval = 30
+  health_check_timeout  = 5
+  healthy_threshold     = 2
+  unhealthy_threshold   = 3
+
+  # ECS Exec (debugging)
+  enable_execute_command = true
 
   tags = var.tags
 }
