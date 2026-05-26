@@ -199,6 +199,24 @@ output "database_summary" {
   value = module.database.database_summary
 }
 
+
+# ============================================================================
+# MÓDULO 5: STORAGE
+# ============================================================================
+module "storage" {
+  source = "./modules/storage"
+
+  project_name = var.project_name
+  environment  = var.environment
+  tags         = var.tags
+}
+
+# Storage Outputs
+output "storage_summary" {
+  value = module.storage.storage_summary
+}
+
+
 # ============================================================================
 # Outputs Globais
 # ============================================================================
